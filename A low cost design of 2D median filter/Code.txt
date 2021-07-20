@@ -1,0 +1,70 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company:
+// Engineer:
+//
+// Create Date:    06:44:58 07/03/2019
+// Design Name:
+// Module Name:    piplelined
+// Project Name:
+// Target Devices:
+// Tool versions:
+// Description:
+//
+// Dependencies:
+//
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+//
+//////////////////////////////////////////////////////////////////////////////////
+module piplelined(i00,i01,i02,i03,i10,i11,i12,i13,p1,p2,p3,p4,clock,reset,preset);
+input clock,reset,preset;
+input [7:0]i00,i01,i02,i03,i10,i11,i12,i13;
+output [7:0]p1,p2,p3,p4;
+
+wire [7:0]a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12;
+wire [7:0]b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12;
+wire [7:0]c1,c2,c3,c4,c5,c6,c7,c8;
+wire [7:0]q1,q2,q3,q4;
+
+dff m1(i00,clock,preset,reset,c1);
+dff m2(i01,clock,preset,reset,c2);
+dff m3(i02,clock,preset,reset,c3);
+dff m4(i03,clock,preset,reset,c4);
+dff m5(i10,clock,preset,reset,c5);
+
+dff m7(i12,clock,preset,reset,c7);
+dff m8(i13,clock,preset,reset,c8);
+
+sorting3numbers u1(a1,a2,a3,c1,c2,c3,clock,reset,preset);
+sorting3numbers u2(a4,a5,a6,c5,c6,c7,clock,reset,preset);
+
+sorting3numbers u4(a10,a11,a12,c6,c7,c8,clock,reset,preset);
+
+dff d1(a1,clock,preset,reset,b1);
+dff d2(a2,clock,preset,reset,b2);
+dff d3(a3,clock,preset,reset,b3);
+
+dff d4(a4,clock,preset,reset,b4);
+dff d5(a5,clock,preset,reset,b5);
+
+
+dff d7(a7,clock,preset,reset,b7);
+dff d8(a8,clock,preset,reset,b8);
+dff d9(a9,clock,preset,reset,b9);
+
+dff d10(a10,clock,preset,reset,b10);
+dff d11(a11,clock,preset,reset,b11);
+dff d12(a12,clock,preset,reset,b12);
+
+median m11(q1,b10,b11,b12,b9,b8,b7,a7,a8,a9,clock,reset,preset);
+
+median m13(q3,b10,b11,b12,a10,a11,a12,a7,a8,a9,clock,reset,preset);
+median m14(q4,a1,a2,a3,a4,a5,a6,b4,b5,b6,clock,reset,preset);
+
+dff n1(q1,clock,preset,reset,p1);
+dff n2(q2,clock,preset,reset,p2);
+
+dff n4(q4,clock,preset,reset,p4);
+endmodule
